@@ -1,0 +1,12 @@
+# Secrets — never commit WiFi passwords, auth keys, SIM/PIN, Tailscale keys
+*.key
+*.secret
+secrets*
+firstrun.sh
+custom.toml
+wpa_supplicant.conf
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
