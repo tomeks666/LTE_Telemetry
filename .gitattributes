@@ -1,0 +1,7 @@
+# These run on the Raspberry Pi (Linux) — force LF so bash doesn't choke on \r.
+*.sh   text eol=lf
+*.conf text eol=lf
+pi/mavlink-router/main.conf text eol=lf
+
+# Docs can be normalized to LF too for consistency
+*.md   text eol=lf
