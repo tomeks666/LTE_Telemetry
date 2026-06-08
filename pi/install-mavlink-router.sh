@@ -24,13 +24,21 @@ apt-get install -y git ninja-build pkg-config gcc g++ libsystemd-dev cmake pytho
 pip3 install --break-system-packages meson 2>/dev/null || pip3 install meson
 
 echo "==> Fetching mavlink-router source..."
-if [[ -d "$SRC/.git" ]]; then
-  git -C "$SRC" pull --recurse-submodules
-  git -C "$SRC" submodule update --init --recursive
-else
+if [[ ! -d "$SRC/.git" ]]; then
   rm -rf "$SRC"
-  git clone --recurse-submodules https://github.com/mavlink-router/mavlink-router.git "$SRC"
+  git clone https://github.com/mavlink-router/mavlink-router.git "$SRC"
+else
+  # Best-effort update; never let a flaky 4G pull abort the whole build.
+  git -C "$SRC" pull --ff-only || echo "    (pull skipped — using existing checkout)"
 fi
+# Submodules are REQUIRED to build. 4G can drop mid-fetch, so retry.
+for attempt in 1 2 3 4 5; do
+  if git -C "$SRC" submodule update --init --recursive; then
+    break
+  fi
+  echo "    submodule fetch attempt $attempt failed; retrying in 3s..."
+  sleep 3
+done
 
 echo "==> Building (this is the slow part on a Pi Zero)..."
 cd "$SRC"
@@ -49,6 +57,12 @@ if [[ -f /etc/mavlink-router/main.conf ]]; then
 else
   install -m 644 "$SCRIPT_DIR/mavlink-router/main.conf" /etc/mavlink-router/main.conf
 fi
+
+echo "==> Installing our systemd unit (robust against mavlink-router's own install path)..."
+BIN="$(command -v mavlink-routerd || echo /usr/local/bin/mavlink-routerd)"
+echo "    binary at: $BIN"
+sed "s|^ExecStart=.*|ExecStart=$BIN -c /etc/mavlink-router/main.conf|" \
+  "$SCRIPT_DIR/mavlink-router.service" > /etc/systemd/system/mavlink-router.service
 
 echo "==> Enabling service..."
 systemctl daemon-reload

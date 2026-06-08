@@ -1,0 +1,17 @@
+[Unit]
+Description=MAVLink Router (FC UART <-> GCS over network)
+# Wait for the serial device to exist before starting.
+After=network.target dev-serial0.device
+Wants=network.target
+
+[Service]
+Type=simple
+# Path is patched to the real binary location by install-mavlink-router.sh.
+ExecStart=/usr/local/bin/mavlink-routerd -c /etc/mavlink-router/main.conf
+Restart=always
+RestartSec=2
+# Don't die if the FC/UART isn't up yet — keep retrying.
+StartLimitIntervalSec=0
+
+[Install]
+WantedBy=multi-user.target
