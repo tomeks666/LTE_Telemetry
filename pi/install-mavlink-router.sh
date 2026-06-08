@@ -16,10 +16,13 @@ SRC=/usr/local/src/mavlink-router
 
 echo "==> Installing build dependencies..."
 apt-get update
-# libsystemd-dev provides systemd.pc — mavlink-router links libsystemd (sd_notify)
-# and meson.build hard-requires it via pkg-config. cmake is a fallback resolver meson
-# probes for; having it avoids the "Found CMake: NO" detour during dependency lookup.
-apt-get install -y git ninja-build pkg-config gcc g++ libsystemd-dev cmake python3-pip
+# mavlink-router's meson.build does dependency('systemd'), which resolves the
+# pkg-config module named "systemd" (systemd.pc). On Debian Trixie+ (systemd 257)
+# that .pc file moved OUT of libsystemd-dev into the separate systemd-dev package.
+# We need BOTH: systemd-dev (systemd.pc, unit dir) and libsystemd-dev (libsystemd.pc,
+# headers for sd_notify). cmake is a fallback dependency resolver meson probes for.
+apt-get install -y git ninja-build pkg-config gcc g++ \
+  systemd-dev libsystemd-dev cmake python3-pip
 # meson newer than the apt version is often needed; pip gives a current one.
 pip3 install --break-system-packages meson 2>/dev/null || pip3 install meson
 
