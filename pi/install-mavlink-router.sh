@@ -16,13 +16,15 @@ SRC=/usr/local/src/mavlink-router
 
 echo "==> Installing build dependencies..."
 apt-get update
-# mavlink-router's meson.build does dependency('systemd'), which resolves the
-# pkg-config module named "systemd" (systemd.pc). On Debian Trixie+ (systemd 257)
-# that .pc file moved OUT of libsystemd-dev into the separate systemd-dev package.
-# We need BOTH: systemd-dev (systemd.pc, unit dir) and libsystemd-dev (libsystemd.pc,
-# headers for sd_notify). cmake is a fallback dependency resolver meson probes for.
+# mavlink-router's meson.build requires the pkg-config module "systemd" (systemd.pc).
+# On Bookworm (systemd 252): libsystemd-dev ships systemd.pc — that's all we need.
+# On Trixie+ (systemd 257): systemd.pc moved to a new systemd-dev package; we need both.
+EXTRA_SYSTEMD_PKG=""
+if apt-cache show systemd-dev >/dev/null 2>&1; then
+  EXTRA_SYSTEMD_PKG="systemd-dev"
+fi
 apt-get install -y git ninja-build pkg-config gcc g++ \
-  systemd-dev libsystemd-dev cmake python3-pip
+  libsystemd-dev $EXTRA_SYSTEMD_PKG cmake python3-pip
 # meson newer than the apt version is often needed; pip gives a current one.
 pip3 install --break-system-packages meson 2>/dev/null || pip3 install meson
 
@@ -43,7 +45,7 @@ for attempt in 1 2 3 4 5; do
   sleep 3
 done
 
-echo "==> Building (this is the slow part on a Pi Zero)..."
+echo "==> Building (slow on single-core boards; ~3-5 min on a Pi 3B)..."
 cd "$SRC"
 meson setup build . --buildtype=release --wipe || meson setup build .
 ninja -C build
