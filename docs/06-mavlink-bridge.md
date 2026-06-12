@@ -5,7 +5,7 @@ station(s) over UDP and TCP. It accepts multiple GCS at once.
 
 ## One-shot setup
 
-On the Pi, with the `pi/` folder copied over:
+After cloning the repo (see [02 · First boot](02-first-boot-ssh.md)):
 
 ```bash
 sudo ~/LTE_Telemetry/pi/setup.sh
@@ -15,11 +15,12 @@ This runs, in order:
 
 1. **`config-uart.sh`** — `enable_uart=1` + `dtoverlay=disable-bt` so the reliable
    PL011 UART is on GPIO14/15, and disables the serial login console.
-2. **`install-mavlink-router.sh`** — builds mavlink-router from source
-   (~3–5 min on a Pi 3B), installs the systemd service, and
-   drops the config at `/etc/mavlink-router/main.conf`.
-3. **`install-tailscale.sh`** — installs Tailscale and runs `tailscale up`
-   (skip with `sudo ./setup.sh --no-tailscale`).
+2. **`install-mavlink-router.sh`** — installs build deps, clones mavlink-router,
+   builds from source (~3–5 min on a Pi 3B), installs the binary + systemd service,
+   and drops the config at `/etc/mavlink-router/main.conf`.
+3. **`install-tailscale.sh`** — installs Tailscale, then **pauses** and prints a
+   login URL. Open it in a browser, approve the device, and the script continues.
+   Skip this step with `sudo ./setup.sh --no-tailscale` if you want to do it later.
 
 Then **reboot** so the UART change takes effect:
 

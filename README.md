@@ -37,21 +37,23 @@ forwards it across the internet (through carrier NAT, via **Tailscale**) to
 
 ## Runbook (do these in order)
 
-1. [Flash the SD card](docs/01-flash-pi.md) — Raspberry Pi OS Lite, pre-seed WiFi + SSH.
-2. [First boot & SSH](docs/02-first-boot-ssh.md) — find the Pi on your LAN, log in.
-3. [Run the setup script](docs/06-mavlink-bridge.md) — `pi/setup.sh` configures UART, builds mavlink-router, installs the service.
-4. [Tailscale](docs/05-tailscale.md) — join the Pi and PC to the same tailnet.
-5. [4G stick](docs/04-4g-stick.md) — verify internet via `usb0`, optionally silence its WiFi.
+1. [Flash the SD card](docs/01-flash-pi.md) — Raspberry Pi OS Lite (32-bit, Bookworm), pre-seed WiFi + SSH.
+2. [First boot & SSH](docs/02-first-boot-ssh.md) — find the Pi on your LAN, clone the repo, run `setup.sh`.
+3. **Reboot** — `sudo reboot` — required for the UART change to take effect.
+4. [Install Tailscale on your PC](docs/05-tailscale.md#on-your-pc) — sign in to the same account you used in step 2.
+5. [4G stick](docs/04-4g-stick.md) — plug it in, verify `usb0` gets an IP.
 6. [Wire the FC + ArduPilot params](docs/03-uart-wiring.md).
 7. [Connect Mission Planner / QGC](docs/07-ground-station.md).
 8. [Troubleshooting](docs/08-troubleshooting.md) if anything misbehaves.
 
-> **TL;DR for a Pi that's already flashed & online:**
+> **TL;DR — on the Pi after first boot:**
 > ```bash
-> git clone <this repo> ~/LTE_Telemetry   # or scp the pi/ folder over
+> git clone https://github.com/tomeks666/LTE_Telemetry.git ~/LTE_Telemetry
 > sudo ~/LTE_Telemetry/pi/setup.sh
+> # setup.sh pauses to print a Tailscale login URL — open it in a browser and approve the device
+> sudo reboot
 > ```
-> then `tailscale up` and connect your GCS to `udp://<pi-tailscale-ip>:14550`.
+> After reboot, connect your GCS to `<pi-tailscale-ip>:14550` (UDP) or `:5760` (TCP).
 
 ## Repo layout
 
