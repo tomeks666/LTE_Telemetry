@@ -7,8 +7,8 @@ box** — no drivers to install.
 
 ## Verify
 
-Plug the stick into the Pi's **USB data** port, wait ~20–30 s for it to register
-on the network, then:
+Plug the stick into any of the Pi 3B's **USB-A ports**, wait ~20–30 s for it to
+register on the network, then:
 
 ```bash
 ip -br addr            # expect a usb0 with a 192.168.x.x address

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # install-mavlink-router.sh — Build & install mavlink-router from source.
 #
-# There is no official ARMv6 .deb, so we compile. On a Pi Zero W this takes
-# ~10-20 min (single core). One-time cost; the binary is tiny and fast.
+# There is no official .deb, so we compile. On a Pi 3B (ARMv7, 4 cores) this
+# takes ~3-5 min. One-time cost; the binary is tiny and fast.
 #
 # Run as root:  sudo ./install-mavlink-router.sh
 set -euo pipefail

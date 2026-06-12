@@ -16,7 +16,7 @@ This runs, in order:
 1. **`config-uart.sh`** — `enable_uart=1` + `dtoverlay=disable-bt` so the reliable
    PL011 UART is on GPIO14/15, and disables the serial login console.
 2. **`install-mavlink-router.sh`** — builds mavlink-router from source
-   (~10–20 min on a Zero W — be patient), installs the systemd service, and
+   (~3–5 min on a Pi 3B), installs the systemd service, and
    drops the config at `/etc/mavlink-router/main.conf`.
 3. **`install-tailscale.sh`** — installs Tailscale and runs `tailscale up`
    (skip with `sudo ./setup.sh --no-tailscale`).

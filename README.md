@@ -1,12 +1,12 @@
 # LTE_Telemetry — ArduPilot UART bridge over 4G
 
-Turn a **Raspberry Pi Zero W** + a **UZ801 4G USB stick** into a long-range
+Turn a **Raspberry Pi 3B** + a **UZ801 4G USB stick** into a long-range
 telemetry link: it reads MAVLink from a **Matek flight controller** over UART and
 forwards it across the internet (through carrier NAT, via **Tailscale**) to
 **Mission Planner** / **QGroundControl** on your PC.
 
 ```
- Matek FC ──UART/MAVLink──▶  RPi Zero W  ──mavlink-router──▶ Tailscale ──▶  PC GCS
+ Matek FC ──UART/MAVLink──▶  RPi 3B      ──mavlink-router──▶ Tailscale ──▶  PC GCS
  (3.3V, 57600 baud)         /dev/serial0    UDP 14550 /        100.x       Mission Planner
                                  │           TCP 5760          overlay     / QGroundControl
                                  │
@@ -29,11 +29,11 @@ forwards it across the internet (through carrier NAT, via **Tailscale**) to
 
 | Part | Notes |
 |------|-------|
-| Raspberry Pi Zero W (512 MB) | Single USB data port — used by the 4G stick |
-| UZ801 4G stick | Presents as USB RNDIS (`usb0`), DHCP, works on Linux out of the box |
+| Raspberry Pi 3B | 4× USB-A ports, ARMv7 — fast to build, easy to wire |
+| UZ801 4G stick | Plugs into any USB-A port; presents as USB RNDIS (`usb0`) |
 | Matek FC w/ ArduPilot | 3.3 V UART (same logic level as Pi — no level shifter) |
-| 5 V BEC, ≥2 A | Power the Pi separately; 4G stick draws current spikes |
-| microSD, 8 GB+ | Raspberry Pi OS Lite |
+| 5 V BEC, ≥2.5 A | Power the Pi via micro-USB PWR; 4G draws current spikes |
+| microSD, 8 GB+ | Raspberry Pi OS Lite (32-bit) |
 
 ## Runbook (do these in order)
 

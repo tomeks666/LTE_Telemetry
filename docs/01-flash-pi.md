@@ -7,9 +7,10 @@ first boot, so you never need a monitor/keyboard.
 
 1. Install **Raspberry Pi Imager** from https://www.raspberrypi.com/software/.
 2. Insert the microSD card.
-3. **Choose Device:** Raspberry Pi Zero W.
+3. **Choose Device:** Raspberry Pi 3 Model B (or 3B+).
 4. **Choose OS:** *Raspberry Pi OS (other)* → **Raspberry Pi OS Lite (32-bit)**.
-   Lite = no desktop; the Zero W has little RAM and we only need a headless box.
+   Lite = no desktop; we only need a headless bridge. Stick to 32-bit — ARMv7
+   32-bit is well-tested and sufficient.
 5. **Choose Storage:** your SD card.
 6. Click **Next → Edit Settings** (the OS customisation dialog). Set:
    - **Hostname:** `dron-telem`  (we'll use this name to find it on the LAN)
@@ -35,5 +36,6 @@ After writing a plain image, mount the **boot** partition and:
 
 ## Next
 
-Eject the card, put it in the Pi, power it from a good **5 V supply** (use the
-`PWR IN` micro-USB port). → [02 · First boot & SSH](02-first-boot-ssh.md)
+Eject the card, put it in the Pi, power it from a good **5 V / 2.5 A supply**
+(micro-USB PWR port). The 3B draws more than a Zero W, especially with the 4G
+stick attached. → [02 · First boot & SSH](02-first-boot-ssh.md)
